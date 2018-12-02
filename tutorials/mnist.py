@@ -1,5 +1,11 @@
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
+import os
+
+
+def check_dir(path=None):
+    if not os.path.isdir(path):
+        os.mkdir(path=path)
 
 
 def get_placeholder(shape=None):
@@ -20,13 +26,13 @@ def get_cross_entropy(pred, label):
     return cross_entropy
 
 
-def optimizer(learning_rate, logit):
+def get_optimizer(learning_rate, logit):
     return tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(logit)
 
 
-def accuracy(predict, label):
+def get_accuracy(predict, label):
     correct_mask = tf.equal(tf.argmax(predict, 1), tf.argmax(label, 1))
-    accuracy_percent = tf.reduce_mean(correct_mask, tf.float32)
+    accuracy_percent = tf.reduce_mean(tf.cast(correct_mask, tf.float32))
     return accuracy_percent
 
 
@@ -34,11 +40,12 @@ def main():
     IMAGE_SIZE = 784
     LABEL_SIZE = 10
     LEARNING_LATE = 0.1
-    DATA_DIR = '../data/mnist'
+    DATA_DIR = r'../data/mnist'
     NUM_STEPS = 1000
     MINIBATCH_SIZE = 100
 
     def get_data(DATA_DIR):
+        check_dir(path=DATA_DIR)
         return input_data.read_data_sets(train_dir=DATA_DIR, one_hot=True)
 
     def train_graph():
@@ -50,11 +57,27 @@ def main():
                                            w=tensor_value['w'])
         return tensor_value
 
+    def to_feed_dict(x_val, x_data, y_val, y_data):
+        return {x_val: x_data, y_val: y_data}
+
     tensor = train_graph()
+    logit = get_cross_entropy(pred=tensor['pred'], label=tensor['y'])
+    optimizer = get_optimizer(learning_rate=LEARNING_LATE, logit=logit)
     data = get_data(DATA_DIR=DATA_DIR)
+    accuracy = get_accuracy(predict=tensor['pred'], label=tensor['y'])
 
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
 
         for _ in range(NUM_STEPS):
             batch_data, batch_label = data.train.next_batch(MINIBATCH_SIZE)
+            sess.run(optimizer, feed_dict=to_feed_dict(tensor['x'], batch_data,
+                                                       tensor['y'], batch_label))
+
+        ans = sess.run(accuracy, feed_dict=to_feed_dict(tensor['x'], data.test.images,
+                                                        tensor['y'], data.test.labels))
+    print('Accuracy: {:.4}%'.format(ans))
+
+
+if __name__ == '__main__':
+    main()
