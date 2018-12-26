@@ -64,8 +64,9 @@ def main():
             for step in range(NUM_STEP+1):
                 sess.run(train, feed_dict={x: data['x_data'], y_label: data['y_data']})
 
-                if (step % 5 == 0):
+                if step % 5 == 0:
                     print(step, sess.run([w, b]))
+
 
 if __name__ == '__main__':
     main()
