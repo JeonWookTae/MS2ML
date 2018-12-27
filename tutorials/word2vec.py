@@ -34,5 +34,11 @@ def get_batch(data, size):
     labels = [data[i][1] for i in index]
     return inputs, labels
 
+
 def main():
     DATA_PATH = f'../data/sentence/test.txt'
+
+    data = get_sentence_data(path = DATA_PATH)
+    word_dict = get_word_dict(data)
+    get_skip_gram(data, word_dict)
+
