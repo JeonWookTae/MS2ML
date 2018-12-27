@@ -2,8 +2,8 @@ import tensorflow as tf
 import numpy as np
 
 
-def get_sentence_data():
-    with open(f'../data/sentence/test.txt') as f:
+def get_sentence_data(path):
+    with open(path) as f:
         data = f.read()
     return data
 
@@ -34,3 +34,5 @@ def get_batch(data, size):
     labels = [data[i][1] for i in index]
     return inputs, labels
 
+def main():
+    DATA_PATH = f'../data/sentence/test.txt'
