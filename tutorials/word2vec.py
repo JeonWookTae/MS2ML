@@ -37,8 +37,11 @@ def get_batch(data, size):
 
 def main():
     DATA_PATH = f'../data/sentence/test.txt'
+    BATCH_SIZE = 200
+    LEARNING_LATE = 0.01
+    EMBEDDING_SIZE = 5
 
     data = get_sentence_data(path = DATA_PATH)
     word_dict = get_word_dict(data)
-    get_skip_gram(data, word_dict)
+    skip_gram = get_skip_gram(data, word_dict)
 
