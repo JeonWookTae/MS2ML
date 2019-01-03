@@ -70,7 +70,7 @@ def main():
     LEARNING_LATE = 0.01
     EMBEDDING_SIZE = 5
     SAMPLED = 15
-    EPOCH = 100
+    EPOCH = 200
 
     data = get_sentence_data(path=DATA_PATH)
     word_dict, skip_gram = get_word_skip_data(data)
