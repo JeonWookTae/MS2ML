@@ -67,7 +67,7 @@ def NCE_optimizer(nce_weight,
 def main():
     DATA_PATH = f'../data/sentence/test.txt'
     BATCH_SIZE = 20
-    LEARNING_LATE = 0.01
+    LEARNING_LATE = 0.001
     EMBEDDING_SIZE = 5
     SAMPLED = 15
     EPOCH = 200
