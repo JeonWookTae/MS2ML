@@ -20,4 +20,4 @@ batch_size = 128
 hidden_size = 128
 
 _inputs = tf.placeholder(tf.float32, shape=[None, time_steps, element_size])
-y = tf.placeholder(tf.float32, shape=[None, num_classes])
+y = tf.placeholder( tf.float32, shape=[None, num_classes])
