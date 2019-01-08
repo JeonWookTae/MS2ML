@@ -33,7 +33,7 @@ def get_linear_layer(vector):
     return tf.matmul(vector, wl) + b1
 
 
-last_rnn_output = outputs[:, -1:]
+last_rnn_output = outputs[:, -1, :]
 final_output = get_linear_layer(last_rnn_output)
 
 softmax = tf.nn.softmax_cross_entropy_with_logits_v2(logits=final_output, labels=y)
@@ -42,3 +42,29 @@ train_step = tf.train.RMSPropOptimizer(0.001, 0.9) \
     .minimize(cross_entropy)
 
 correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(final_output, 1))
+accuracy = (tf.reduce_mean(tf.cast(correct_prediction, tf.float32))) * 100
+
+sess = tf.InteractiveSession()
+sess.run(tf.global_variables_initializer())
+
+DATA_DIR = r'../data/mnist'
+mnist = get_data(data_dir=DATA_DIR)
+
+test_data = mnist.test.images[:batch_size].reshape((-1, time_steps, element_size))
+test_label = mnist.test.labels[:batch_size]
+
+for i in range(3001):
+    batch_x, batch_y = mnist.train.next_batch(batch_size)
+    batch_x = batch_x.reshape((batch_size, time_steps, element_size))
+    sess.run(train_step, feed_dict={_inputs: batch_x, y: batch_y})
+
+    if i % 1000 == 0:
+        feed_dict = {_inputs: batch_x, y: batch_y}
+        acc = sess.run(accuracy, feed_dict=feed_dict)
+        loss = sess.run(cross_entropy, feed_dict=feed_dict)
+        print("Iter {}, minibatch loss={:.6f}, training accuracy={:.6f}".format(
+            i, acc, loss
+        ))
+
+print("Testing Accuracy: {}".format(
+    sess.run(accuracy, feed_dict={_inputs: test_data, y: test_label})))
