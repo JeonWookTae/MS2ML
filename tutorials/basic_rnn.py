@@ -53,17 +53,17 @@ mnist = get_data(data_dir=DATA_DIR)
 test_data = mnist.test.images[:batch_size].reshape((-1, time_steps, element_size))
 test_label = mnist.test.labels[:batch_size]
 
-for i in range(3001):
+for step in range(3001):
     batch_x, batch_y = mnist.train.next_batch(batch_size)
     batch_x = batch_x.reshape((batch_size, time_steps, element_size))
     sess.run(train_step, feed_dict={_inputs: batch_x, y: batch_y})
 
-    if i % 1000 == 0:
+    if step % 1000 == 0:
         feed_dict = {_inputs: batch_x, y: batch_y}
         acc = sess.run(accuracy, feed_dict=feed_dict)
         loss = sess.run(cross_entropy, feed_dict=feed_dict)
         print("Iter {}, minibatch loss={:.6f}, training accuracy={:.6f}".format(
-            i, acc, loss
+            step, acc, loss
         ))
 
 print("Testing Accuracy: {}".format(
