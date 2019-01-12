@@ -29,8 +29,8 @@ for i in range(10000):
     event_sentences.append(" ".join([digit_to_word_map[r] for r in rand_odd_ints]))
     odd_sentence.append(" ".join([digit_to_word_map[r] for r in rand_even_ints]))
 
-    data = event_sentences + odd_sentence
-    seqlens *= 2
+data = event_sentences + odd_sentence
+seqlens *= 2
 
 word2index_map = dict()
 index = 0
@@ -45,9 +45,9 @@ vocabulary_size = len(index2word_map)
 
 labels = [1] * 10000 + [0] * 10000
 for i in range(len(labels)):
-    labels = labels[i]
+    label = labels[i]
     one_hot_encoding = [0] * 2
-    one_hot_encoding[labels] = 1
+    one_hot_encoding[label] = 1
     labels[i] = one_hot_encoding
 
 data_indices = list(range(len(data)))
